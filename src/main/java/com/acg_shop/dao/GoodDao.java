@@ -15,4 +15,6 @@ public interface GoodDao {
 
     List<Good> queryAll();
 
+    int insert(Good good);
+
 }

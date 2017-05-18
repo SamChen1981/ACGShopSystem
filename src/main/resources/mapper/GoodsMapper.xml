@@ -9,7 +9,7 @@
         ${good}.id, ${good}.good_id, ${good}.good_name, ${good}.good_description, ${good}.good_pic
     </sql>
 
-    <resultMap id="Goods_Table_Base_Map" type="com.acg_shop.entity.Good">
+    <resultMap id="Goods_Table_Base_Map" type="Good">
         <id property="id" column="id" javaType="Integer" jdbcType="INTEGER"/>
         <result property="gid" column="gid" javaType="Integer" jdbcType="INTEGER"/>
         <result property="goodName" column="good_name" javaType="String" jdbcType="VARCHAR"/>
@@ -24,5 +24,37 @@
         </include>
         FROM goods_table AS G
     </select>
+
+    <insert id="insert" parameterType="Good">
+        INSERT INTO goods_table
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="goodId != null">
+                good_id,
+            </if>
+            <if test="goodName != null">
+                good_name,
+            </if>
+            <if test="goodDescription != null">
+                good_description,
+            </if>
+            <if test="goodPic != null">
+                good_pic,
+            </if>
+        </trim>
+        <trim prefix=" VALUES (" suffix=")" suffixOverrides=",">
+            <if test="goodId != null">
+                #{goodId},
+            </if>
+            <if test="goodName != null">
+                #{goodName},
+            </if>
+            <if test="goodDescription != null">
+                #{goodDescription},
+            </if>
+            <if test="goodPic != null">
+                #{goodPic},
+            </if>
+        </trim>
+    </insert>
 
 </mapper>

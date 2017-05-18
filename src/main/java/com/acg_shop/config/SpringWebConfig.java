@@ -22,6 +22,7 @@ import java.util.Properties;
  * Created by mac_zly on 2017/4/18.
  */
 
+// 等同于<mvc:annotation-driven/>
 @EnableWebMvc
 @Configuration
 @ComponentScan({"com.acg_shop.controller"})

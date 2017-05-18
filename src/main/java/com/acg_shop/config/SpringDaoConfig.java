@@ -13,19 +13,22 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * Dao配置
  * Created by mac_zly on 2017/4/18.
  */
 
-@EnableWebMvc
 @Configuration
+@EnableTransactionManagement
 @ComponentScan({"com.acg_shop.dao"})
 public class SpringDaoConfig {
 
@@ -93,14 +96,13 @@ public class SpringDaoConfig {
     }
 
     @Bean
-    public SqlSessionFactoryBean sqlSessionFactoryBean() throws Exception {
+    public static SqlSessionFactoryBean sqlSessionFactoryBean() throws Exception {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
 
         // 设置数据源
         sqlSessionFactoryBean.setDataSource(druidDataSource());
         // 设置mybatis数据
-        String str = "mybatis-config.xml";
-        InputStream inputStream = Resources.getResourceAsStream(str);
+        InputStream inputStream = Resources.getResourceAsStream("mybatis-config.xml");
         Resource resource = new InputStreamResource(inputStream);
         sqlSessionFactoryBean.setConfigLocation(resource);
 

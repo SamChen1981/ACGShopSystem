@@ -15,11 +15,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {MyWebInitializer.class, SpringWebConfig.class, SpringDaoConfig.class})
+//@ContextConfiguration(initializers = MyWebInitializer.class)
 public class GoodDaoTest {
 
     @Autowired
-    private GoodDao goodDao;
+//    private GoodDao goodDao;
 
     @Test
     public void queryAll() throws Exception {

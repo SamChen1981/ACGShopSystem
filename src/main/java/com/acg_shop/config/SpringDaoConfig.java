@@ -14,13 +14,14 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.transaction.annotation.TransactionManagementConfigurer;
 
 import java.io.InputStream;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 /**
  * Dao配置
@@ -28,12 +29,14 @@ import java.util.Properties;
  */
 
 @Configuration
+// 相当于<tx:annotation-driven/>
 @EnableTransactionManagement
-@ComponentScan({"com.acg_shop.dao"})
-public class SpringDaoConfig {
+@ComponentScan({"com.acg_shop.dao", "com.acg_shop.service"})
+// TransactionManagementConfigurer -> <tx:annotation-driven transaction-manager="dataSourceTransactionManager"/>
+public class SpringDaoConfig implements TransactionManagementConfigurer {
 
     @Bean
-    public static DruidDataSource druidDataSource() throws Exception {
+    public DruidDataSource druidDataSource() {
         DruidDataSource druidDataSource = new DruidDataSource();
         druidDataSource.setUsername("root");
         druidDataSource.setPassword("Zly123go.");
@@ -67,8 +70,12 @@ public class SpringDaoConfig {
         // 验证连接有效与否的SQL，不同的数据配置不同
         druidDataSource.setValidationQuery("SELECT 'x'");
 
-        //
-        druidDataSource.setFilters("stat,log4j2");
+        try {
+            // 配置监控统计拦截的filters
+            druidDataSource.setFilters("stat,log4j2");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         List<Filter> filters = new ArrayList<Filter>();
         filters.add(statFilter());
@@ -79,7 +86,7 @@ public class SpringDaoConfig {
     }
 
     @Bean
-    public static StatFilter statFilter() {
+    public StatFilter statFilter() {
         StatFilter statFilter = new StatFilter();
         statFilter.setMergeSql(true);
         statFilter.setSlowSqlMillis(10000);
@@ -88,7 +95,7 @@ public class SpringDaoConfig {
     }
 
     @Bean
-    public static Log4j2Filter log4j2Filter() {
+    public Log4j2Filter log4j2Filter() {
         Log4j2Filter log4j2Filter = new Log4j2Filter();
         log4j2Filter.setResultSetLogEnabled(true);
         log4j2Filter.setStatementExecutableSqlLogEnable(true);
@@ -96,12 +103,12 @@ public class SpringDaoConfig {
     }
 
     @Bean
-    public static SqlSessionFactoryBean sqlSessionFactoryBean() throws Exception {
+    public SqlSessionFactoryBean sqlSessionFactoryBean() throws Exception {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
 
         // 设置数据源
         sqlSessionFactoryBean.setDataSource(druidDataSource());
-        // 设置mybatis数据
+        // mybatis设置
         InputStream inputStream = Resources.getResourceAsStream("mybatis-config.xml");
         Resource resource = new InputStreamResource(inputStream);
         sqlSessionFactoryBean.setConfigLocation(resource);
@@ -120,11 +127,23 @@ public class SpringDaoConfig {
 
     // 配置扫描DAO接口包, 动态实现DAO接口,注入到spring容器中
     @Bean
-    public static MapperScannerConfigurer mapperScannerConfigurer() {
+    public MapperScannerConfigurer mapperScannerConfigurer() {
         MapperScannerConfigurer mapperScannerConfigurer = new MapperScannerConfigurer();
         mapperScannerConfigurer.setSqlSessionFactoryBeanName("sqlSessionFactoryBean");
         mapperScannerConfigurer.setBasePackage("com.acg_shop.dao");
         return mapperScannerConfigurer;
     }
 
+    // 事务管理
+    @Bean
+    public DataSourceTransactionManager dataSourceTransactionManager() {
+        DataSourceTransactionManager dataSourceTransactionManager = new DataSourceTransactionManager(druidDataSource());
+        dataSourceTransactionManager.setRollbackOnCommitFailure(true);
+        return dataSourceTransactionManager;
+    }
+
+    @Override
+    public PlatformTransactionManager annotationDrivenTransactionManager() {
+        return dataSourceTransactionManager();
+    }
 }

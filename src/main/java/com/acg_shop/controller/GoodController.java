@@ -1,6 +1,8 @@
 package com.acg_shop.controller;
 
+import com.acg_shop.dto.ResultDto;
 import com.acg_shop.entity.Good;
+import com.acg_shop.enums.ResultEnum;
 import com.acg_shop.service.IGoodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,8 +24,13 @@ public class GoodController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public Integer add(Good good) {
-        return goodService.insert(good);
+    public ResultDto add(Good good) {
+        int i = goodService.insert(good);
+        if (i == 1) {
+            return new ResultDto(ResultEnum.QUERY_SUCCESS, true, null);
+        } else {
+            return new ResultDto(ResultEnum.QUERY_FAILD, false, null);
+        }
     }
 
 }

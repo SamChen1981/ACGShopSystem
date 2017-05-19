@@ -1,12 +1,16 @@
 package com.acg_shop.config;
 
+import com.acg_shop.filter.BaseFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
@@ -25,7 +29,8 @@ import java.util.Properties;
 // 等同于<mvc:annotation-driven/>
 @EnableWebMvc
 @Configuration
-@ComponentScan({"com.acg_shop.controller"})
+@EnableAspectJAutoProxy
+@ComponentScan({"com.acg_shop.controller", "com.acg_shop.aspect", "com.acg_shop.handle"})
 public class SpringWebConfig extends WebMvcConfigurerAdapter {
 
     // ============= FreeMarker ====================
@@ -81,5 +86,11 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
 //        mediaTypes.add(new MediaType("application/json;charset=UTF-8"));
 //        converter.setSupportedMediaTypes(mediaTypes);
         converters.add(converter);
+    }
+
+    // ============= 拦截器 ====================
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new BaseFilter());
     }
 }

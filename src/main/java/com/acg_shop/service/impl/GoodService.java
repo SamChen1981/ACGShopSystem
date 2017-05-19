@@ -26,11 +26,9 @@ public class GoodService implements IGoodService {
         return goodDao.queryAll();
     }
 
-    @Transactional
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public int insert(Good good) {
-        goodDao.insert(good);
-        throw new RuntimeException("/ zero");
-        //return count;
+        return goodDao.insert(good);
     }
 }

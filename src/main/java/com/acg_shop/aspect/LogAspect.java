@@ -21,7 +21,7 @@ public class LogAspect {
 
     private static final Logger logger = LogManager.getLogger(LogAspect.class);
 
-    @Pointcut("execution(public * com.acg_shop.controller.GoodController.*(..))")
+    @Pointcut(value = "execution(public * com.acg_shop.controller.GoodController.*(..))")
     public void log() {
     }
 

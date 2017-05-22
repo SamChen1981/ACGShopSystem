@@ -31,4 +31,9 @@ public class GoodService implements IGoodService {
     public int insert(Good good) {
         return goodDao.insert(good);
     }
+
+    @Override
+    public int delete(Integer goodId) {
+        return goodDao.delete(goodId);
+    }
 }

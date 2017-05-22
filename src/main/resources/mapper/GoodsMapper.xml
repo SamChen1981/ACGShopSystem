@@ -17,6 +17,7 @@
         <result property="goodPic" column="good_pic" javaType="String" jdbcType="VARCHAR"/>
     </resultMap>
 
+    <!-- 查询 -->
     <select id="queryAll" resultMap="Goods_Table_Base_Map">
         SELECT
         <include refid="Goods_Table_Column">
@@ -25,6 +26,7 @@
         FROM goods_table AS G
     </select>
 
+    <!-- 插入 -->
     <insert id="insert" parameterType="Good">
         INSERT INTO goods_table
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -56,5 +58,10 @@
             </if>
         </trim>
     </insert>
+
+    <!-- 删除 -->
+    <delete id="delete" parameterType="Integer">
+        DELETE FROM goods_table WHERE good_id = #{goodId}
+    </delete>
 
 </mapper>

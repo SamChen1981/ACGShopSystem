@@ -25,6 +25,10 @@ public class ResultDto<T> {
         this.result = result;
     }
 
+    public ResultDto(ResultEnum resultEnum, Boolean success) {
+        this(resultEnum.getCode(), resultEnum.getMessage(), success, null);
+    }
+
     public ResultDto(ResultEnum resultEnum, Boolean success, T result) {
         this(resultEnum.getCode(), resultEnum.getMessage(), success, result);
     }

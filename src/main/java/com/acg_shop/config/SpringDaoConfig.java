@@ -109,7 +109,7 @@ public class SpringDaoConfig implements TransactionManagementConfigurer {
         // 设置数据源
         sqlSessionFactoryBean.setDataSource(druidDataSource());
         // mybatis设置
-        InputStream inputStream = Resources.getResourceAsStream("mybatis-config.xml");
+        InputStream inputStream = Resources.getResourceAsStream("mybatis.xml");
         Resource resource = new InputStreamResource(inputStream);
         sqlSessionFactoryBean.setConfigLocation(resource);
 
@@ -142,6 +142,7 @@ public class SpringDaoConfig implements TransactionManagementConfigurer {
         return dataSourceTransactionManager;
     }
 
+    // 事物
     @Override
     public PlatformTransactionManager annotationDrivenTransactionManager() {
         return dataSourceTransactionManager();

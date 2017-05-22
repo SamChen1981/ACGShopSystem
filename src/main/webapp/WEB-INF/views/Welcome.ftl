@@ -7,7 +7,7 @@
 <body>
 
 <#list goods as good>
-    ${good.goodName},${good.goodDescription},${good.goodPic}
+${good.goodName},${good.goodDescription},${good.goodPic}
 </#list>
 
 </body>

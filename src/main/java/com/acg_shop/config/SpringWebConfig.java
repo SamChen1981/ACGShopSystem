@@ -40,7 +40,7 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
         resolver.setCache(false);
         //resolver.setPrefix("");
         //resolver.setViewNames("/*");
-        resolver.setSuffix(".ftl");
+        resolver.setSuffix(".html");
         resolver.setOrder(1);
         resolver.setContentType("text/html;charset=UTF-8");
 

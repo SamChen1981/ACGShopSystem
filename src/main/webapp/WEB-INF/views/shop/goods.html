@@ -5,17 +5,16 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>欢迎</title>
+    <title>Document</title>
 </head>
 <body>
 
-<!-- 搜索 -->
-<div class="container col-md-6 col-md-offset-3" style="margin-top: 100px">
-    <#include "./common/search.html" encoding="UTF-8"/>
+<div class="container col-md-6 col-md-offset-3" style="margin-top: 20px">
+    <#include "../common/search.html" encoding="UTF-8"/>
 </div>
 
-<!-- 推荐商品 -->
-<div class="container col-md-8 col-md-offset-2" style="margin-top: 20px; background-color: blanchedalmond;">
+<!-- 展示所有秒杀的商品 -->
+<div class="container col-md-10 col-md-offset-1" style="margin-top: 20px; background-color: blanchedalmond;">
 
     <#list goods as good>
         <div class="col-sm-2" style="height: 250px; background-color: darkcyan; color: white; margin-left: 10px">
@@ -29,6 +28,6 @@
 
 </body>
 
-<#include "./common/common.html" encoding="UTF-8"/>
+<#include "../common/common.html" encoding="UTF-8"/>
 
 </html>

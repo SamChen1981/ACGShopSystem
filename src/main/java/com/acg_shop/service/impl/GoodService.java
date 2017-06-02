@@ -29,7 +29,8 @@ public class GoodService implements IGoodService {
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public int insert(Good good) {
-        return goodDao.insert(good);
+        int i = goodDao.insert(good);
+        return i;
     }
 
     @Override

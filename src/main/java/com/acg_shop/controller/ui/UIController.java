@@ -24,4 +24,16 @@ public class UIController {
         return "Welcome";
     }
 
+    @RequestMapping(value = {"/goods"}, method = RequestMethod.GET)
+    public String goods(Model model) {
+        model.addAttribute("goods", goodDao.queryAll());
+        return "shop/goods";
+    }
+
+    @RequestMapping("/search")
+    public String search(String keyword) {
+
+        return "shop/goods";
+    }
+
 }

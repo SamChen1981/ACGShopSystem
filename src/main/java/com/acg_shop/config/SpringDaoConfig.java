@@ -7,9 +7,11 @@ import com.alibaba.druid.pool.DruidDataSource;
 import org.apache.ibatis.io.Resources;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -31,12 +33,13 @@ import java.util.List;
 @Configuration
 // 相当于<tx:annotation-driven/>
 @EnableTransactionManagement
-@ComponentScan({"com.acg_shop.dao", "com.acg_shop.service"})
-// TransactionManagementConfigurer -> <tx:annotation-driven transaction-manager="dataSourceTransactionManager"/>
-public class SpringDaoConfig implements TransactionManagementConfigurer {
+@ComponentScan(basePackages = {"com.acg_shop.dao", "com.acg_shop.service"})
+public class SpringDaoConfig {
 
     @Bean
+    @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
     public DruidDataSource druidDataSource() {
+        System.out.println("druidDataSource");
         DruidDataSource druidDataSource = new DruidDataSource();
         druidDataSource.setUsername("root");
         druidDataSource.setPassword("Zly123go.");
@@ -77,7 +80,7 @@ public class SpringDaoConfig implements TransactionManagementConfigurer {
             e.printStackTrace();
         }
 
-        List<Filter> filters = new ArrayList<Filter>();
+        List<Filter> filters = new ArrayList<>();
         filters.add(statFilter());
         filters.add(log4j2Filter());
         druidDataSource.setProxyFilters(filters);
@@ -86,7 +89,7 @@ public class SpringDaoConfig implements TransactionManagementConfigurer {
     }
 
     @Bean
-    public StatFilter statFilter() {
+    public static StatFilter statFilter() {
         StatFilter statFilter = new StatFilter();
         statFilter.setMergeSql(true);
         statFilter.setSlowSqlMillis(10000);
@@ -95,7 +98,7 @@ public class SpringDaoConfig implements TransactionManagementConfigurer {
     }
 
     @Bean
-    public Log4j2Filter log4j2Filter() {
+    public static Log4j2Filter log4j2Filter() {
         Log4j2Filter log4j2Filter = new Log4j2Filter();
         log4j2Filter.setResultSetLogEnabled(true);
         log4j2Filter.setStatementExecutableSqlLogEnable(true);
@@ -103,11 +106,11 @@ public class SpringDaoConfig implements TransactionManagementConfigurer {
     }
 
     @Bean
-    public SqlSessionFactoryBean sqlSessionFactoryBean() throws Exception {
+    public SqlSessionFactoryBean sqlSessionFactoryBean(DruidDataSource druidDataSource) throws Exception {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
 
         // 设置数据源
-        sqlSessionFactoryBean.setDataSource(druidDataSource());
+        sqlSessionFactoryBean.setDataSource(druidDataSource);
         // mybatis设置
         InputStream inputStream = Resources.getResourceAsStream("mybatis.xml");
         Resource resource = new InputStreamResource(inputStream);
@@ -136,15 +139,9 @@ public class SpringDaoConfig implements TransactionManagementConfigurer {
 
     // 事务管理
     @Bean
-    public DataSourceTransactionManager dataSourceTransactionManager() {
-        DataSourceTransactionManager dataSourceTransactionManager = new DataSourceTransactionManager(druidDataSource());
+    public DataSourceTransactionManager dataSourceTransactionManager(DruidDataSource druidDataSource) {
+        DataSourceTransactionManager dataSourceTransactionManager = new DataSourceTransactionManager(druidDataSource);
         dataSourceTransactionManager.setRollbackOnCommitFailure(true);
         return dataSourceTransactionManager;
-    }
-
-    // 事物
-    @Override
-    public PlatformTransactionManager annotationDrivenTransactionManager() {
-        return dataSourceTransactionManager();
     }
 }

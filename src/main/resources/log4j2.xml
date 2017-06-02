@@ -4,7 +4,7 @@
     <!-- 定义下面的引用名 -->
     <Properties>
         <property name="log_pattern">%d{yyyy-MM-dd HH:mm:ss z} %-5level %class{36}%L%M - %msg%xEx%n</property>
-        <property name="log-path">${sys:catalina.home}/blogLogs</property><!-- ${web:rootDir}是项目根目录 -->
+        <property name="log-path">/blog/blogLogs</property><!-- ${web:rootDir}是项目根目录 -->
         <property name="every_file_size">5M</property><!-- 日志切割的最小单位 -->
         <property name="output_log_level">debug</property><!-- 日志输出级别 -->
     </Properties>

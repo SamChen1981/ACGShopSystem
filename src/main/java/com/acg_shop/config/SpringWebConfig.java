@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -86,6 +87,12 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
 //        mediaTypes.add(new MediaType("application/json;charset=UTF-8"));
 //        converter.setSupportedMediaTypes(mediaTypes);
         converters.add(converter);
+    }
+
+    // 配置静态资源的处理,对于静态文件转发给Servlet容器中默认的Servlet处理，而不是Spring的DispatcherServlet来处理
+    @Override
+    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+        configurer.enable();
     }
 
     // ============= 拦截器 ====================

@@ -23,18 +23,18 @@ public class GoodService implements IGoodService {
 
     @Override
     public List<Good> queryAll(Integer limit, Integer offset) {
-        return goodDao.queryAll();
+        return goodDao.findAll();
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public int insert(Good good) {
-        int i = goodDao.insert(good);
-        return i;
+        return  goodDao.save(good).getId() == 1 ? 1 : 0;
     }
 
     @Override
     public int delete(Integer goodId) {
-        return goodDao.delete(goodId);
+        goodDao.delete(goodId);
+        return 1;
     }
 }

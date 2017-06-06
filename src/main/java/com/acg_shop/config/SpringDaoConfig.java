@@ -4,23 +4,20 @@ import com.alibaba.druid.filter.Filter;
 import com.alibaba.druid.filter.logging.Log4j2Filter;
 import com.alibaba.druid.filter.stat.StatFilter;
 import com.alibaba.druid.pool.DruidDataSource;
-import org.apache.ibatis.io.Resources;
-import org.mybatis.spring.SqlSessionFactoryBean;
-import org.mybatis.spring.mapper.MapperScannerConfigurer;
+import org.hibernate.SessionFactory;
+import org.hibernate.boot.spi.SessionFactoryBuilderFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.transaction.annotation.TransactionManagementConfigurer;
 
-import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,9 +28,8 @@ import java.util.List;
  */
 
 @Configuration
-// 相当于<tx:annotation-driven/>
-@EnableTransactionManagement
 @ComponentScan(basePackages = {"com.acg_shop.dao", "com.acg_shop.service"})
+@EnableJpaRepositories(basePackages = {"com.acg_shop.dao"}, entityManagerFactoryRef = "entityManagerFactoryBean")
 public class SpringDaoConfig {
 
     @Bean
@@ -88,6 +84,25 @@ public class SpringDaoConfig {
         return druidDataSource;
     }
 
+    //
+    /*@Bean
+    public JdbcTemplate jdbcTemplate(DruidDataSource druidDataSource) {
+        return new JdbcTemplate(druidDataSource);
+    }*/
+
+    // Spring Data Jpa
+    @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean(DruidDataSource druidDataSource) {
+        LocalContainerEntityManagerFactoryBean e = new LocalContainerEntityManagerFactoryBean();
+        e.setDataSource(druidDataSource);
+        e.setPackagesToScan("com.acg_shop.entity");
+        HibernateJpaVendorAdapter jpaVendorAdaptr = new HibernateJpaVendorAdapter();
+        jpaVendorAdaptr.setShowSql(true);
+        jpaVendorAdaptr.setGenerateDdl(true);
+        e.setJpaVendorAdapter(jpaVendorAdaptr);
+        return e;
+    }
+
     @Bean
     public static StatFilter statFilter() {
         StatFilter statFilter = new StatFilter();
@@ -105,43 +120,9 @@ public class SpringDaoConfig {
         return log4j2Filter;
     }
 
-    @Bean
-    public SqlSessionFactoryBean sqlSessionFactoryBean(DruidDataSource druidDataSource) throws Exception {
-        SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
-
-        // 设置数据源
-        sqlSessionFactoryBean.setDataSource(druidDataSource);
-        // mybatis设置
-        InputStream inputStream = Resources.getResourceAsStream("mybatis.xml");
-        Resource resource = new InputStreamResource(inputStream);
-        sqlSessionFactoryBean.setConfigLocation(resource);
-
-        // 设置别名 好像在mybatis中也设置了
-        sqlSessionFactoryBean.setTypeAliasesPackage("com.acg_shop.entity");
-        // 设置Mapper
-        /*Resource[] resources = new Resource[]{
-                new InputStreamResource(Resources.getResourceAsStream("mapper/GoodsMapper.xml"))
-        };*/
-        // 资源扫描
-        PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-        sqlSessionFactoryBean.setMapperLocations(resolver.getResources("classpath:/mapper/*.xml"));
-        return sqlSessionFactoryBean;
-    }
-
-    // 配置扫描DAO接口包, 动态实现DAO接口,注入到spring容器中
-    @Bean
-    public MapperScannerConfigurer mapperScannerConfigurer() {
-        MapperScannerConfigurer mapperScannerConfigurer = new MapperScannerConfigurer();
-        mapperScannerConfigurer.setSqlSessionFactoryBeanName("sqlSessionFactoryBean");
-        mapperScannerConfigurer.setBasePackage("com.acg_shop.dao");
-        return mapperScannerConfigurer;
-    }
-
     // 事务管理
-    @Bean
-    public DataSourceTransactionManager dataSourceTransactionManager(DruidDataSource druidDataSource) {
-        DataSourceTransactionManager dataSourceTransactionManager = new DataSourceTransactionManager(druidDataSource);
-        dataSourceTransactionManager.setRollbackOnCommitFailure(true);
-        return dataSourceTransactionManager;
+    @Bean(name = "transactionManager")
+    public DataSourceTransactionManager transactionManager(DruidDataSource druidDataSource) {
+        return new DataSourceTransactionManager(druidDataSource);
     }
 }

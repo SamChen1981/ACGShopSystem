@@ -35,7 +35,6 @@ public class SpringDaoConfig {
     @Bean
     @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
     public DruidDataSource druidDataSource() {
-        System.out.println("druidDataSource");
         DruidDataSource druidDataSource = new DruidDataSource();
         druidDataSource.setUsername("root");
         druidDataSource.setPassword("Zly123go.");

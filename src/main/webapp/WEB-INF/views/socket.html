@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Scoket</title>
+</head>
+<body>
+
+<div class="container">
+    <div>
+        <button class="btn btn-success" id="connect" onclick="connect();">Connect</button>
+        <button class="btn btn-success" id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button>
+    </div>
+    <div id="conversationDiv">
+        <p id="get">
+            <span>消息出现在这里: </span><br/>
+        </p>
+        <p>
+            <textarea id="name" rows="5"></textarea>
+        </p>
+        <button class="btn btn-info" id="sendName" onclick="sendName();">Send</button>
+        <p id="response"></p>
+    </div>
+</div>
+
+</body>
+
+<#include "./common/common.html" encoding="UTF-8"/>
+
+<script src="//cdn.bootcss.com/sockjs-client/1.1.4/sockjs.js"></script>
+<script src="//cdn.bootcss.com/stomp.js/2.3.3/stomp.js"></script>
+
+<script>
+
+    var stompClient = null;
+    var ip = null;
+
+    $.post('/ip', {}, function (_ip) {
+        ip = _ip;
+        connect();
+    }).fail(function (a, b, c) {
+        alert("获得IP失败");
+    });
+
+    function setConnected(connected) {
+        if (connected) {
+            stompClient.send("/app/change-notice", {}, '<span>' + ip + ' -> 已连接</span><br/>');
+            $('#get').append('<span>您已连接</span><br/>');
+        } else {
+            stompClient.send("/app/change-notice", {}, '<span>' + ip + ' -> 已断开</span><br/>');
+            $('#get').append('<span>您已断开连接</span><br/>');
+        }
+        document.getElementById('connect').disabled = connected;
+        document.getElementById('disconnect').disabled = !connected;
+        document.getElementById('conversationDiv').style.visibility = connected ? 'visible' : 'hidden';
+        document.getElementById('response').innerHTML = '';
+    }
+
+    // 开启socket连接
+    function connect() {
+        var socket = new SockJS('/socket');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function (frame) {
+            setConnected(true);
+
+            stompClient.subscribe('/topic/notice', function (data) {
+                $('#get').append('<span>' + data.body + '</span><br/>');
+            });
+        });
+    }
+
+    // 断开socket连接
+    function disconnect() {
+        if (stompClient != null) {
+            stompClient.disconnect();
+        }
+        setConnected(false);
+        console.log("Disconnected");
+    }
+
+    // 向‘/app/change-notice’服务端发送消息
+    function sendName() {
+        var value = document.getElementById('name').value;
+        stompClient.send("/app/change-notice", {}, ip + ' -> ' + value);
+    }
+</script>
+
+</html>

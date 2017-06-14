@@ -19,7 +19,8 @@ import java.util.Map;
 
 /**
  * 配置的开始
- * Created by mac_zly on 2017/4/18.
+  // 测试要加@WebAppConfiguration
+  * Created by mac_zly on 2017/4/18.
  */
 
 @Configuration

@@ -81,11 +81,10 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
     //  json
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        super.configureMessageConverters(converters);
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-//        List<MediaType> mediaTypes = new ArrayList<>(1);
-//        mediaTypes.add(new MediaType("application/json;charset=UTF-8"));
-//        converter.setSupportedMediaTypes(mediaTypes);
+        List<MediaType> mediaTypes = new ArrayList<>(1);
+        mediaTypes.add(MediaType.APPLICATION_JSON_UTF8);
+        converter.setSupportedMediaTypes(mediaTypes);
         converters.add(converter);
     }
 

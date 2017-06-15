@@ -23,13 +23,13 @@ public class GoodService implements IGoodService {
 
     @Override
     public List<Good> queryAll(Integer limit, Integer offset) {
-        return goodDao.findAll();
+        return goodDao.queryAll();
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public int insert(Good good) {
-        return  goodDao.save(good).getId() == 1 ? 1 : 0;
+        return  goodDao.insert(good) == 1 ? 1 : 0;
     }
 
     @Override

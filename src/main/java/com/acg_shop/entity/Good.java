@@ -1,31 +1,16 @@
 package com.acg_shop.entity;
 
-import javax.persistence.*;
-
 /**
  * 商品
  * Created by mac_zly on 2017/4/24.
  */
 
-@Entity
-@Table(name = "goods_table", catalog = "")
 public class Good {
 
-    @Id
-    @GeneratedValue
-    @Column(name = "id")
     private Integer id;
-
-    @Column(name = "good_id", nullable = false)
     private Integer goodId;
-
-    @Column(name = "good_name", nullable = false)
     private String goodName;
-
-    @Column(name = "good_description", nullable = false)
     private String goodDescription;
-
-    @Column(name = "good_pic", nullable = false)
     private String goodPic;
 
     public Integer getId() {

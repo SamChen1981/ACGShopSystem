@@ -2,7 +2,6 @@ package com.acg_shop.dao;
 
 import com.acg_shop.entity.Good;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -14,16 +13,13 @@ import java.util.List;
  * Created by mac_zly on 2017/6/6.
  */
 
-//@Repository
-//@Primary // 首选Bean
-//@Qualifier("JdbcTemplate-Impl")
-public class GoodDaoImpl // implements GoodDao
-{
+@Repository
+public class GoodDaoImpl implements GoodDao {
 
-    //@Autowired
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    //@Override
+    @Override
     public List<Good> queryAll() {
         List<Good> list = new ArrayList<>();
         jdbcTemplate.query("SELECT id, good_id, good_name, good_description, good_pic FROM goods_table", resultSet -> {
@@ -38,7 +34,7 @@ public class GoodDaoImpl // implements GoodDao
         return list;
     }
 
-    //@Override
+    @Override
     public int insert(Good good) {
         int i = jdbcTemplate.update(
                 "INSERT INTO goods_table (good_name, good_id, good_description, good_pic) VALUES (?,?,?,?)",
@@ -46,7 +42,7 @@ public class GoodDaoImpl // implements GoodDao
         return i;
     }
 
-   // @Override
+    @Override
     public int delete(Integer goodId) {
         return jdbcTemplate.update("DELETE FROM goods_table WHERE good_id = ?", goodId);
     }

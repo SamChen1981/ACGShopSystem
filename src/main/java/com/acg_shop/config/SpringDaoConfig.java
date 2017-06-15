@@ -4,19 +4,13 @@ import com.alibaba.druid.filter.Filter;
 import com.alibaba.druid.filter.logging.Log4j2Filter;
 import com.alibaba.druid.filter.stat.StatFilter;
 import com.alibaba.druid.pool.DruidDataSource;
-import org.hibernate.SessionFactory;
-import org.hibernate.boot.spi.SessionFactoryBuilderFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -29,7 +23,6 @@ import java.util.List;
 
 @Configuration
 @ComponentScan(basePackages = {"com.acg_shop.dao", "com.acg_shop.service"})
-@EnableJpaRepositories(basePackages = {"com.acg_shop.dao"}, entityManagerFactoryRef = "entityManagerFactoryBean")
 public class SpringDaoConfig {
 
     @Bean
@@ -83,23 +76,10 @@ public class SpringDaoConfig {
         return druidDataSource;
     }
 
-    //
-    /*@Bean
+    // JdbcTemplate
+    @Bean
     public JdbcTemplate jdbcTemplate(DruidDataSource druidDataSource) {
         return new JdbcTemplate(druidDataSource);
-    }*/
-
-    // Spring Data Jpa
-    @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean(DruidDataSource druidDataSource) {
-        LocalContainerEntityManagerFactoryBean e = new LocalContainerEntityManagerFactoryBean();
-        e.setDataSource(druidDataSource);
-        e.setPackagesToScan("com.acg_shop.entity");
-        HibernateJpaVendorAdapter jpaVendorAdaptr = new HibernateJpaVendorAdapter();
-        jpaVendorAdaptr.setShowSql(true);
-        jpaVendorAdaptr.setGenerateDdl(true);
-        e.setJpaVendorAdapter(jpaVendorAdaptr);
-        return e;
     }
 
     @Bean

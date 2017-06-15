@@ -20,13 +20,13 @@ public class UIController {
 
     @RequestMapping(value = {"/", "/welcome"}, method = RequestMethod.GET)
     public String home(Model model) {
-        model.addAttribute("goods", goodDao.findAll());
+        model.addAttribute("goods", goodDao.queryAll());
         return "Welcome";
     }
 
     @RequestMapping(value = {"/goods"}, method = RequestMethod.GET)
     public String goods(Model model) {
-        model.addAttribute("goods", goodDao.findAll());
+        model.addAttribute("goods", goodDao.queryAll());
         return "shop/goods";
     }
 

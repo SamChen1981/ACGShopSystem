@@ -36,4 +36,9 @@ public class UIController {
         return "shop/goods";
     }
 
+    @RequestMapping("/login")
+    public String login() {
+        return "login";
+    }
+
 }

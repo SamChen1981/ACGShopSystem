@@ -83,7 +83,7 @@ public class SpringDaoConfig {
     }
 
     @Bean
-    public static StatFilter statFilter() {
+    public StatFilter statFilter() {
         StatFilter statFilter = new StatFilter();
         statFilter.setMergeSql(true);
         statFilter.setSlowSqlMillis(10000);
@@ -92,7 +92,7 @@ public class SpringDaoConfig {
     }
 
     @Bean
-    public static Log4j2Filter log4j2Filter() {
+    public Log4j2Filter log4j2Filter() {
         Log4j2Filter log4j2Filter = new Log4j2Filter();
         log4j2Filter.setResultSetLogEnabled(true);
         log4j2Filter.setStatementExecutableSqlLogEnable(true);

@@ -5,11 +5,11 @@
       <configuration>
         <fileset id="fileset" name="Spring Application Context" removed="false">
           <file>file://$MODULE_DIR$/src/main/java/com/acg_shop/MyWebInitializer.java</file>
+          <file>file://$MODULE_DIR$/src/main/java/com/acg_shop/config/ScanConfig.java</file>
           <file>file://$MODULE_DIR$/src/main/java/com/acg_shop/config/SpringDaoConfig.java</file>
           <file>file://$MODULE_DIR$/src/main/java/com/acg_shop/config/SpringWebConfig.java</file>
-          <file>file://$MODULE_DIR$/src/main/java/com/acg_shop/config/SpringServiceConfig.java</file>
           <file>file://$MODULE_DIR$/src/main/java/com/acg_shop/config/TransationManageConfig.java</file>
-          <file>file://$MODULE_DIR$/src/main/java/com/acg_shop/config/ScanConfig.java</file>
+          <file>file://$MODULE_DIR$/src/main/java/com/acg_shop/config/WebScoketConfig.java</file>
         </fileset>
       </configuration>
     </facet>
@@ -21,10 +21,6 @@
         <webroots>
           <root url="file://$MODULE_DIR$/src/main/webapp" relative="/" />
         </webroots>
-        <sourceRoots>
-          <root url="file://$MODULE_DIR$/src/main/java" />
-          <root url="file://$MODULE_DIR$/src/main/resources" />
-        </sourceRoots>
       </configuration>
     </facet>
   </component>
@@ -34,7 +30,6 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
